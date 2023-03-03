@@ -118,12 +118,17 @@ type Color struct {
 // buildPixelMatrix 构建像素矩阵。
 func buildPixelMatrix(img image.Image, charSet []byte) *PixelMatrix {
 	matrix := make([][]*Pixel, 0)
-	for y := 0; y < img.Bounds().Dy(); y++ {
+	for y := 0; y < img.Bounds().Dy(); y++ { // 方向 ↓。
 		pixels := make([]*Pixel, 0)
-		for x := 0; x < img.Bounds().Dx(); x++ {
+		for x := 0; x < img.Bounds().Dx(); x++ { // 方向 →。
+			// 1. 获取RGB、灰度值。
 			r, g, b := get256RGB(img, x, y)
 			gray := 0.2126*float64(r) + 0.7152*float64(g) + 0.0722*float64(b)
+
+			// 2. 根据灰度选用字符集的字符。
 			charIndex := int(gray / 256.0 * float64(len(charSet)))
+
+			// 3. 形成像素。
 			pixels = append(pixels, &Pixel{
 				Color: &Color{R: r, G: g, B: b},
 				Char:  charSet[charIndex],
