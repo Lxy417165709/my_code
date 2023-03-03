@@ -15,7 +15,7 @@ import (
 // 字符集。
 var (
 	charSet1 = []byte(`@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~<>i!lI;:,\"^'. `)
-	charSet2 = []byte(`@&W0*+· `)
+	charSet2 = []byte(`@&W0*+. `)
 	charSet3 = []byte(`@ `)
 )
 
@@ -30,9 +30,11 @@ func main() {
 	}
 
 	// 2. 缩小图片。
-	width := img.Bounds().Dx()
-	height := img.Bounds().Dy()
-	img = resize.Resize(uint(width), uint(height/3), img, resize.Lanczos3)
+	width := uint(img.Bounds().Dx())
+	height := uint(img.Bounds().Dy())
+	scalingFactor := uint(5) // 缩小倍数。
+	ratio := uint(2)         // 终端中单个字符的高度/宽度的比值。
+	img = resize.Resize(width/scalingFactor, height/scalingFactor/ratio, img, resize.Lanczos3)
 
 	// 3. 形成像素矩阵。
 	pixelMatrix := buildPixelMatrix(img, charSet2)
