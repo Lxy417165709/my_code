@@ -40,7 +40,9 @@ func main() {
 	pixelMatrix := buildPixelMatrix(img, charSet2)
 
 	// 4. 在终端输出图像。
+	fmt.Println()
 	fmt.Println(pixelMatrix.toCharPhotoGray())
+	fmt.Println()
 	fmt.Println(pixelMatrix.toCharPhotoColorful())
 }
 
