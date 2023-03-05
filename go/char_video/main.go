@@ -25,7 +25,7 @@ func main() {
 	var charSet = []byte(` .,:;i1tfLCG08@`)
 	frameNoToPixelMatrixMap := map[int]*char_photo.PixelMatrix{}
 	imgPathFormat := "C:/Users/李学悦/Desktop/all/github/Lxy417165709/test/photo/mykk/frame_%05d.bmp"
-	bgFrameNo, endFrameNo := 1, 100
+	bgFrameNo, endFrameNo := 1, 1774
 
 	// 2. 处理。
 	for frameNo := bgFrameNo; frameNo <= endFrameNo; frameNo++ {
@@ -126,11 +126,15 @@ func main() {
 	t3s := make([]time.Time, 0)
 
 	wg := sync.WaitGroup{}
-	for frameNo := bgFrameNo; frameNo <= endFrameNo; frameNo += 2 {
-		go func(frameNo int) {
+	for frameNo := bgFrameNo; frameNo <= endFrameNo; frameNo += 1 {
+		go func(frameNo int, startTime time.Time) {
 			wg.Add(1)
 			defer wg.Done()
 			mutex.Lock()
+			defer mutex.Unlock()
+			if time.Now().UnixMicro()-startTime.UnixMicro() >= 10000 {
+				return
+			}
 			m := frameNoToPixelMatrixMap[frameNo]
 			t1s = append(t1s, time.Now())
 			for y := 0; y < len(m.Matrix); y++ {
@@ -144,9 +148,8 @@ func main() {
 			t2s = append(t2s, time.Now())
 			s.Show()
 			t3s = append(t3s, time.Now())
-			mutex.Unlock()
-		}(frameNo)
-		time.Sleep(66666 * time.Microsecond)
+		}(frameNo, time.Now())
+		time.Sleep(33333 * time.Microsecond)
 	}
 
 	wg.Wait()
